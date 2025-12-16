@@ -24,9 +24,9 @@ public class HeartrateRepository {
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     LiveData<List<Heartrate>> getAll() {
-        HeartrateDatabase.databaseWriteExecutor.execute(() -> {
-            heartrateList = heartrateDao.getAll();
-        });
+        // CHANGED: This method used to re-assign heartrateList inside an executor.
+        // That isn't needed here, because Room's LiveData query already updates automatically.
+        // Returning the same LiveData is the normal pattern.
         return heartrateList;
     }
 

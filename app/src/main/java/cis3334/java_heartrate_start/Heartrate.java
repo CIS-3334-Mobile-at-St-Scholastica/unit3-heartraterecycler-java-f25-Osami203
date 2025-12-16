@@ -62,7 +62,7 @@ public class Heartrate {
     /**
      * @return the longer description for this range such as "Fitness and fat burning"
      */
-    public String getRangeDescrtiption() {
+    public String getRangeDescription() {
         calcHeartRange();
         return rangeDescriptions[range];
     }
@@ -73,6 +73,4 @@ public class Heartrate {
     public String toString() {
         return "Pulse of " + pulse + " - Cardio level: " + getRangeName();
     }
-
-
 }

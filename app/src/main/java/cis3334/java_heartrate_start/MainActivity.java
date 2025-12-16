@@ -1,8 +1,11 @@
 package cis3334.java_heartrate_start;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     Button buttonInsert;
     MainViewModel mainViewModel;
 
+    RecyclerView recyclerView;
+    HeartRateAdapter heartRateAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
         editTextPulse = findViewById(R.id.editTextPulse);
         editTextDisplay = findViewById(R.id.editTextDisplay);
 
+        recyclerView = findViewById(R.id.recyclerView);
+
+        heartRateAdapter = new HeartRateAdapter(getApplication(), mainViewModel);
+        recyclerView.setAdapter(heartRateAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         setupInsertButton();            // Set up the OnClickListener for the insert button
         setupLiveDataObserver();
     }
@@ -41,9 +53,11 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.getAllHeartrates().observe(this, new Observer<List<Heartrate>>() {
             @Override
             public void onChanged(@Nullable List<Heartrate> allHeartrates) {
-                Log.d("CIS 3334", "MainActivity -- LiveData Observer -- Number of Pizzas = "+allHeartrates.size());
-                editTextDisplay.setText("Number of heartrates = "+allHeartrates.size());
-                // TODO: update the RecycleView Array Adapter
+                Log.d("CIS 3334", "MainActivity -- LiveData Observer -- Number of Heartrates = " + allHeartrates.size());
+                editTextDisplay.setText("Number of heartrates = " + allHeartrates.size());
+
+                heartRateAdapter.setAllHeartrates(allHeartrates);
+                heartRateAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -56,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("CIS 3334", "Insert button clicked");
+
                 Integer pulse = Integer.parseInt(editTextPulse.getText().toString());
                 Integer age = Integer.parseInt(editTextAge.getText().toString());
                 mainViewModel.insert(pulse, age);

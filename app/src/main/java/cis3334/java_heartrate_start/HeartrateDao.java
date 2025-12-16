@@ -1,6 +1,5 @@
 package cis3334.java_heartrate_start;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
